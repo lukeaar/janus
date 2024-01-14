@@ -8,5 +8,6 @@ repository = "https://github.com/lukeaar/janus"
 license-file = "COPYING"
 
 [dependencies]
-eframe = "0.25.0"
+eframe = { version = "0.25.0", default-features = false, features = ["glow", "persistence",] }
 syntect = "5.0"
+serde = "1.0.195"
