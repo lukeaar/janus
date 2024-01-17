@@ -45,13 +45,18 @@ impl eframe::App for Editor {
         egui::CentralPanel::default().show(ctx, |ui| {
             egui::ScrollArea::both().show(ui, |ui| {
                 ui.horizontal(|ui| {
-                    ui.vertical(|ui| {
-                        for n in self.text.lines().enumerate(){
-                            ui.label(
-                                egui::RichText::new((n.0 + 1).to_string())
-                            );
-                        }
-                    });
+                    let mut line_numbers: String = "".to_owned();
+                    for n in self.text.lines().enumerate() {
+                        line_numbers.push_str(&*((n.0 + 1).to_string() + "\n"));
+                    }
+                    ui.add_sized(
+                        egui::vec2(ui.min_size().x, ui.available_height()),
+                        egui::TextEdit::multiline(&mut line_numbers)
+                            .desired_width(0.0)
+                            .interactive(false)
+                            .frame(false)
+                            .code_editor()
+                    );
                     ui.add_sized(
                         egui::vec2(f32::INFINITY, ui.available_height()),
                         egui::TextEdit::multiline(&mut self.text)
@@ -60,7 +65,7 @@ impl eframe::App for Editor {
                             .frame(false),
                     );
                 });
-            });
+            })
         });
 
         egui::TopBottomPanel::bottom("bottom_pannel").show(ctx, |ui| {
