@@ -11,4 +11,3 @@ license-file = "COPYING"
 eframe = { version = "0.25.0", default-features = true, features = ["persistence",] }
 syntect = "5.0"
 serde = "1.0.195"
-epi = "0.17.0"
