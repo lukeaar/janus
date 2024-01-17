@@ -1,11 +1,12 @@
 use eframe::egui;
-
 use crate::set_font;
 
 #[derive(serde::Deserialize, serde::Serialize)]
 #[serde(default)]
 pub struct Editor {
     text: String,
+    //theme: Theme,
+    //font_size: f32
 }
 
 impl Default for Editor {
@@ -42,13 +43,20 @@ impl eframe::App for Editor {
     }
 
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        let mut line_numbers: String = "".to_owned();
+        let mut longest_line_length: f32 = 0.0;
+        for line in self.text.lines().enumerate() {
+            line_numbers.push_str(&*((line.0 + 1).to_string() + "\n"));
+            if (line.1.len() as f32) * 4.0 > longest_line_length {
+                longest_line_length = (line.1.len() as f32) * 4.0;
+            }
+        }
         egui::CentralPanel::default().show(ctx, |ui| {
-            egui::ScrollArea::both().show(ui, |ui| {
+            if ui.available_width() > longest_line_length {
+                longest_line_length = ui.available_width() - 5.0
+            }
+            egui::ScrollArea::vertical().show(ui, |ui| {
                 ui.horizontal(|ui| {
-                    let mut line_numbers: String = "".to_owned();
-                    for n in self.text.lines().enumerate() {
-                        line_numbers.push_str(&*((n.0 + 1).to_string() + "\n"));
-                    }
                     ui.add_sized(
                         egui::vec2(ui.min_size().x, ui.available_height()),
                         egui::TextEdit::multiline(&mut line_numbers)
@@ -57,13 +65,15 @@ impl eframe::App for Editor {
                             .frame(false)
                             .code_editor()
                     );
-                    ui.add_sized(
-                        egui::vec2(f32::INFINITY, ui.available_height()),
-                        egui::TextEdit::multiline(&mut self.text)
-                            .code_editor()
-                            .desired_width(0.0)
-                            .frame(false),
-                    );
+                    egui::ScrollArea::horizontal().show(ui, |ui| {
+                        ui.add_sized(
+                            egui::vec2(longest_line_length, ui.available_height()),
+                            egui::TextEdit::multiline(&mut self.text)
+                                .code_editor()
+                                .desired_width(f32::INFINITY)
+                                .frame(false),
+                        );
+                    });
                 });
             })
         });

@@ -1,5 +1,6 @@
 [package]
 name = "janus"
+authors = ["Luke Aaron"]
 description = "A scratchpad-like text manipulator with LLM integration written in Rust"
 version = "0.1.0"
 edition = "2021"
