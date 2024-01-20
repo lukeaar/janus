@@ -43,6 +43,8 @@ impl eframe::App for Editor {
     }
 
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        //self.text = self.text.replace("\t", "    ");
+
         let mut line_numbers: String = "".to_owned();
         let mut longest_line_length: f32 = 0.0;
         let mut last_line_number: usize = 0;
@@ -54,13 +56,20 @@ impl eframe::App for Editor {
             }
         }
         if self.text.len() == 0 || self.text.ends_with('\n') {
-            line_numbers.push_str(&*((last_line_number + 1).to_string()));
+            last_line_number = last_line_number + 1;
+            line_numbers.push_str(&*(last_line_number.to_string()));
         }
+
+        egui::TopBottomPanel::bottom("bottom_panel").show(ctx, |ui| {
+            ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                ui.add(egui::Label::new("Ln ".to_string() + &*(last_line_number.to_string())));
+            });
+        });
+
         egui::CentralPanel::default().show(ctx, |ui| {
             if ui.available_width() - 32.0 > longest_line_length {
                 longest_line_length = ui.available_width() - 32.0
             }
-
             ui.with_layout(egui::Layout::left_to_right(egui::Align::Center).with_cross_justify(true), |ui| {
                 egui::ScrollArea::vertical().show(ui, |ui| {
                     ui.horizontal(|ui| {
@@ -73,7 +82,7 @@ impl eframe::App for Editor {
                                 .code_editor()
                         );
                         egui::ScrollArea::horizontal().show(ui, |ui| {
-                            ui.add_sized(
+                            let text_box = ui.add_sized(
                                 egui::vec2(longest_line_length, ui.available_height()),
                                 egui::TextEdit::multiline(&mut self.text)
                                     .code_editor()
@@ -83,12 +92,6 @@ impl eframe::App for Editor {
                         });
                     });
                 })
-            });
-        });
-
-        egui::TopBottomPanel::bottom("bottom_pannel").show(ctx, |ui| {
-            egui::menu::bar(ui, |ui| {
-                egui::widgets::global_dark_light_mode_switch(ui);
             });
         });
     }
