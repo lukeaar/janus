@@ -7,8 +7,10 @@ edition = "2021"
 readme = "README.md"
 repository = "https://github.com/lukeaar/janus"
 license-file = "COPYING"
+build = "build.rs"
 
 [dependencies]
-eframe = { version = "0.25.0", default-features = true, features = ["persistence",] }
-syntect = "5.0"
-serde = "1.0.195"
+slint = "1.4"
+
+[build-dependencies]
+slint-build = "1.4"
