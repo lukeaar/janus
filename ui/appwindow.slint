@@ -1,3 +1,24 @@
+import { VerticalBox, TextEdit, HorizontalBox } from "std-widgets.slint";
 export component AppWindow inherits Window {
-    
+    width: 600px;
+    height: 600px;
+    VerticalBox {
+        HorizontalBox {
+            Text {
+                text: "1";
+                color: Colors.blue;
+            }
+            TextEdit {
+                text: "Test";
+                wrap: TextWrap.no-wrap;
+                has-focus: true;
+            }
+        }
+        HorizontalBox {
+            height: 40px;
+            Text {
+                text: "LEFT";
+            }
+        }
+    }
 }
