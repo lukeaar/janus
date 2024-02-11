@@ -20,3 +20,5 @@ fn main() -> eframe::Result<()> {
         Box::new(|cc| Box::new(Editor::new(cc))),
     )
 }
+
+### CHANGE TO SLINT
